@@ -309,22 +309,12 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed instructions.
 
 ## 📝 License
 
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
+This project is licensed under the Apache 2.0 License - see [LICENSE.md](LICENSE.md) for details.
 
 ---
 
 ## 👨‍💻 Author
 
-**Nathan** - Portfolio Project
+**Nathan Carlson** - Portfolio Project
 
 **Built to demonstrate:** Full-stack development, AI integration, RAG implementation, serverless architecture, payment systems, and production-ready AWS deployment.
-
----
-
-## 🙏 Acknowledgments
-
-- OpenAI for GPT-4 and embeddings API
-- Vercel for Next.js framework
-- AWS for serverless infrastructure
-- Neon for serverless PostgreSQL
-- Stripe for payment infrastructure
