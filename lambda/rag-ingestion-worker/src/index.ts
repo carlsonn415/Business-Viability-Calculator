@@ -129,7 +129,6 @@ export const handler: Handler = async (event: LambdaPayload) => {
       where: { id: jobId },
       data: {
         status: "failed",
-        errorMessage: error instanceof Error ? error.message : "Unknown error",
         completedAt: new Date(),
       },
     });

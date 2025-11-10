@@ -24,15 +24,17 @@ export function errorResponse(
   code?: string,
   details?: unknown
 ): NextResponse<ApiError> {
-  return NextResponse.json(
-    {
-      ok: false,
-      error: message,
-      ...(code && { code }),
-      ...(details && { details }),
-    },
-    { status }
-  );
+  const response: ApiError = {
+    ok: false,
+    error: message,
+  };
+  if (code) {
+    response.code = code;
+  }
+  if (details) {
+    response.details = details;
+  }
+  return NextResponse.json(response, { status });
 }
 
 /**
