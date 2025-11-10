@@ -49,9 +49,12 @@ export default function AuthButtons() {
 
   async function handleSignIn() {
     try {
+      // Ensure Amplify is configured before signing in
+      configureAmplify();
       await signInWithRedirect();
     } catch (e) {
-      console.error(e);
+      console.error("Sign in error:", e);
+      alert("Failed to sign in. Please check your browser console for details.");
     }
   }
 

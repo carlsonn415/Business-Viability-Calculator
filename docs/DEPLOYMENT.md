@@ -212,8 +212,15 @@ NEXT_PUBLIC_COGNITO_DOMAIN=your-prefix.auth.us-east-2.amazoncognito.com
 After Amplify deployment, update Cognito callback URLs:
 1. Go to Cognito User Pool → **App integration**
 2. Edit your app client
-3. Add production URL: `https://your-amplify-domain.amplifyapp.com`
-4. Save changes
+3. Add **both** of these callback URLs:
+   - `https://your-amplify-domain.amplifyapp.com`
+   - `https://your-amplify-domain.amplifyapp.com/*`
+4. Add **both** of these sign-out URLs:
+   - `https://your-amplify-domain.amplifyapp.com`
+   - `https://your-amplify-domain.amplifyapp.com/*`
+5. Save changes
+
+**Important:** Cognito requires both the base URL and the wildcard version (`/*`) to handle OAuth redirects properly.
 
 ---
 

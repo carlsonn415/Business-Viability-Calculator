@@ -6,37 +6,70 @@ const region = process.env.NEXT_PUBLIC_AMPLIFY_REGION!;
 const userPoolId = process.env.NEXT_PUBLIC_USER_POOL_ID!;
 const userPoolClientId = process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID!;
 const oauthDomain = process.env.NEXT_PUBLIC_COGNITO_DOMAIN; // e.g. your-prefix.auth.us-east-2.amazoncognito.com
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || (typeof window !== "undefined" ? window.location.origin : "");
+
+function getRedirectUrls(): string[] {
+  // Priority: 1. Environment variable, 2. window.location.origin
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
+    (typeof window !== "undefined" ? window.location.origin : "");
+  
+  if (!baseUrl) {
+    console.warn("Amplify: No redirect URL configured. Set NEXT_PUBLIC_APP_URL or ensure window.location.origin is available.");
+    return [];
+  }
+
+  // Return both the base URL and with wildcard for Cognito compatibility
+  return [
+    baseUrl,
+    `${baseUrl}/*`,
+  ];
+}
+
+let isConfigured = false;
 
 export function configureAmplify() {
-  if (!userPoolId || !userPoolClientId) return;
-
-  // Use environment variable for redirect URLs, fallback to window.location.origin
-  const redirectSignIn = appUrl || (typeof window !== "undefined" ? window.location.origin : "");
-  const redirectSignOut = redirectSignIn;
-
-  if (!redirectSignIn) {
-    console.warn("Amplify: No redirect URL configured. Set NEXT_PUBLIC_APP_URL or ensure window.location.origin is available.");
+  if (isConfigured) return; // Only configure once
+  
+  if (!userPoolId || !userPoolClientId) {
+    console.warn("Amplify: Missing required configuration (userPoolId or userPoolClientId)");
     return;
   }
 
-  Amplify.configure({
-    Auth: {
-      Cognito: {
-        userPoolId,
-        userPoolClientId,
-        loginWith: {
-          oauth: oauthDomain
-            ? {
-                domain: oauthDomain,
-                scopes: ["openid", "email", "profile"],
-                redirectSignIn: [redirectSignIn],   // <-- must be string[]
-                redirectSignOut: [redirectSignOut], // <-- must be string[]
-                responseType: "code",
-              }
-            : undefined,
+  if (!oauthDomain) {
+    console.warn("Amplify: OAuth domain not configured. Set NEXT_PUBLIC_COGNITO_DOMAIN");
+    return;
+  }
+
+  const redirectUrls = getRedirectUrls();
+  if (redirectUrls.length === 0) {
+    console.warn("Amplify: No redirect URLs available. Configuration skipped.");
+    return;
+  }
+
+  try {
+    Amplify.configure({
+      Auth: {
+        Cognito: {
+          userPoolId,
+          userPoolClientId,
+          loginWith: {
+            oauth: {
+              domain: oauthDomain,
+              scopes: ["openid", "email", "profile"],
+              redirectSignIn: redirectUrls,
+              redirectSignOut: redirectUrls,
+              responseType: "code",
+            },
+          },
         },
       },
-    },
-  });
+    });
+    
+    isConfigured = true;
+    console.log("Amplify configured successfully", {
+      userPoolId: userPoolId.substring(0, 10) + "...",
+      redirectUrls,
+    });
+  } catch (error) {
+    console.error("Amplify configuration error:", error);
+  }
 }
