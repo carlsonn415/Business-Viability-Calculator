@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import OpenAI from "openai";
 import * as cheerio from "cheerio";
 import pdfParse from "pdf-parse";
+// Type assertion for pdf-parse which lacks proper TypeScript types
+const parsePdf = pdfParse as (buffer: Buffer) => Promise<{ text: string }>;
 
 // Initialize Prisma Client with proper configuration for Lambda
 const prisma = new PrismaClient({
@@ -159,7 +161,7 @@ async function fetchContent(url: string): Promise<string | null> {
     if (contentType.includes("application/pdf")) {
       // Handle PDF
       const buffer = await response.arrayBuffer();
-      const data = await pdfParse(Buffer.from(buffer));
+      const data = await parsePdf(Buffer.from(buffer));
       return data.text;
     } else if (contentType.includes("text/html")) {
       // Handle HTML

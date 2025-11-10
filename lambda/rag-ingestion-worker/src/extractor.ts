@@ -1,5 +1,7 @@
 import * as cheerio from "cheerio";
 import pdfParse from "pdf-parse";
+// Type assertion for pdf-parse which lacks proper TypeScript types
+const parsePdf = pdfParse as (buffer: Buffer) => Promise<{ text: string }>;
 
 /**
  * Extract text content from a URL (HTML or PDF)
@@ -94,7 +96,7 @@ async function extractHtml(response: Response): Promise<string> {
  */
 async function extractPdf(response: Response): Promise<string> {
   const buffer = await response.arrayBuffer();
-  const data = await pdfParse(Buffer.from(buffer));
+  const data = await parsePdf(Buffer.from(buffer));
   return data.text;
 }
 
