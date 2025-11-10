@@ -11,12 +11,11 @@ const redirectSignIn = typeof window !== "undefined" ? window.location.origin : 
 const redirectSignOut = redirectSignIn;
 
 export function configureAmplify() {
-  if (!userPoolId || !userPoolClientId || !region) return;
+  if (!userPoolId || !userPoolClientId) return;
 
   Amplify.configure({
     Auth: {
       Cognito: {
-        region,
         userPoolId,
         userPoolClientId,
         loginWith: {
