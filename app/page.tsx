@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState, Suspense } from "react";
 import { getCurrentUser, fetchAuthSession, signInWithRedirect } from "aws-amplify/auth";
 import { configureAmplify } from "@/lib/auth/amplifyClient";
+import { getAndClearRedirectDestination, setRedirectDestination } from "@/lib/auth/redirectHelpers";
 
 interface Project {
   id: string;
@@ -81,6 +82,13 @@ export default function HomePage() {
         setIsAuthenticated(true);
         setCheckingAuth(false);
         
+        // Check for redirect destination after sign-in
+        const redirectPath = getAndClearRedirectDestination();
+        if (redirectPath) {
+          router.push(redirectPath);
+          return;
+        }
+        
         // Fetch projects
         const session = await fetchAuthSession();
         const idToken = session.tokens?.idToken?.toString();
@@ -105,7 +113,7 @@ export default function HomePage() {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [router]);
 
   const handleSuccess = () => {
     setShowSuccess(true);
@@ -206,6 +214,7 @@ export default function HomePage() {
                   await getCurrentUser();
                   router.push("/projects/new/discovery");
                 } catch {
+                  setRedirectDestination("/projects/new/discovery");
                   await signInWithRedirect();
                 }
               }}
@@ -213,12 +222,20 @@ export default function HomePage() {
             >
               Get Started for Free
             </button>
-            <a
-              href="/pricing"
+            <button
+              onClick={async () => {
+                try {
+                  await getCurrentUser();
+                  router.push("/pricing");
+                } catch {
+                  setRedirectDestination("/pricing");
+                  await signInWithRedirect();
+                }
+              }}
               className="inline-flex items-center justify-center rounded-md border border-gray-300 px-8 py-3 hover:bg-gray-50 text-lg font-medium"
             >
               View Pricing
-            </a>
+            </button>
           </div>
         </section>
 
@@ -299,6 +316,7 @@ export default function HomePage() {
                     await getCurrentUser();
                     router.push("/projects/new/discovery");
                   } catch {
+                    setRedirectDestination("/projects/new/discovery");
                     await signInWithRedirect();
                   }
                 }}
@@ -323,6 +341,7 @@ export default function HomePage() {
                     await getCurrentUser();
                     router.push("/pricing");
                   } catch {
+                    setRedirectDestination("/pricing");
                     await signInWithRedirect();
                   }
                 }}
@@ -346,6 +365,7 @@ export default function HomePage() {
                     await getCurrentUser();
                     router.push("/pricing");
                   } catch {
+                    setRedirectDestination("/pricing");
                     await signInWithRedirect();
                   }
                 }}
@@ -370,6 +390,7 @@ export default function HomePage() {
                   await getCurrentUser();
                   router.push("/projects/new/discovery");
                 } catch {
+                  setRedirectDestination("/projects/new/discovery");
                   await signInWithRedirect();
                 }
               }}
@@ -435,24 +456,26 @@ export default function HomePage() {
           </div>
         </div>
       )}
-      
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xl text-gray-600">
-            Analyze the viability of your business ideas with AI-powered market research
-          </p>
+
+      {!checkingAuth && !loading && isAuthenticated && (
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-xl text-gray-600">
+              Analyze the viability of your business ideas with AI-powered market research
+            </p>
+          </div>
+          {projects.length > 0 && (
+            <button
+              className="inline-flex items-center rounded-md bg-black px-4 py-2 text-white hover:opacity-90"
+              onClick={() => {
+                router.push("/projects/new/discovery");
+              }}
+            >
+              New Project
+            </button>
+          )}
         </div>
-        {!checkingAuth && !loading && isAuthenticated && projects.length > 0 && (
-          <button
-            className="inline-flex items-center rounded-md bg-black px-4 py-2 text-white hover:opacity-90"
-            onClick={() => {
-              router.push("/projects/new/discovery");
-            }}
-          >
-            New Project
-          </button>
-        )}
-      </div>
+      )}
 
       {checkingAuth || loading ? (
         <div className="flex items-center justify-center py-12">
@@ -461,21 +484,22 @@ export default function HomePage() {
       ) : projects.length === 0 ? (
         <div className="text-center py-12 border rounded-lg">
           <p className="text-gray-600 mb-4">No projects yet.</p>
-          <button
-            className="inline-flex items-center rounded-md bg-black px-4 py-2 text-white hover:opacity-90"
-            onClick={async () => {
-              try {
-                await getCurrentUser();
-                // User is authenticated, navigate to new project
-                router.push("/projects/new/discovery");
-              } catch {
-                // User is not authenticated, redirect to sign in
-                await signInWithRedirect();
-              }
-            }}
-          >
-            Start Your First Project
-          </button>
+            <button
+              className="inline-flex items-center rounded-md bg-black px-4 py-2 text-white hover:opacity-90"
+              onClick={async () => {
+                try {
+                  await getCurrentUser();
+                  // User is authenticated, navigate to new project
+                  router.push("/projects/new/discovery");
+                } catch {
+                  // User is not authenticated, redirect to sign in
+                  setRedirectDestination("/projects/new/discovery");
+                  await signInWithRedirect();
+                }
+              }}
+            >
+              Start Your First Project
+            </button>
         </div>
       ) : (
         <div className="space-y-6">

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { getCurrentUser, fetchAuthSession, signInWithRedirect } from "aws-amplify/auth";
 import { configureAmplify } from "@/lib/auth/amplifyClient";
+import { setRedirectDestination, getAndClearRedirectDestination } from "@/lib/auth/redirectHelpers";
 
 interface DiscoveredUrl {
   url: string;
@@ -32,11 +33,19 @@ export default function NewProjectDiscoveryPage() {
       try {
         await getCurrentUser();
         
+        // Check for redirect destination after sign-in (shouldn't happen here, but handle it)
+        const redirectPath = getAndClearRedirectDestination();
+        if (redirectPath && redirectPath !== "/projects/new/discovery") {
+          router.push(redirectPath);
+          return;
+        }
+        
         // Check usage limits before allowing new project
         const session = await fetchAuthSession();
         const idToken = session.tokens?.idToken?.toString();
         
         if (!idToken) {
+          setRedirectDestination("/projects/new/discovery");
           await signInWithRedirect();
           return;
         }
@@ -67,6 +76,7 @@ export default function NewProjectDiscoveryPage() {
       } catch (err) {
         console.error("Error checking usage:", err);
         // User is not authenticated, redirect to sign in
+        setRedirectDestination("/projects/new/discovery");
         await signInWithRedirect();
       }
     })();

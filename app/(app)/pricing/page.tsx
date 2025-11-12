@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { PLANS } from "@/lib/stripe/plans";
 import { fetchAuthSession, getCurrentUser, signInWithRedirect } from "aws-amplify/auth";
 import { configureAmplify } from "@/lib/auth/amplifyClient";
+import { setRedirectDestination, getAndClearRedirectDestination } from "@/lib/auth/redirectHelpers";
 
 function PricingContent() {
   const router = useRouter();
@@ -23,6 +24,13 @@ function PricingContent() {
     configureAmplify();
     (async () => {
       try {
+        // Check for redirect destination after sign-in
+        const redirectPath = getAndClearRedirectDestination();
+        if (redirectPath && redirectPath !== "/pricing") {
+          router.push(redirectPath);
+          return;
+        }
+        
         const session = await fetchAuthSession();
         const idToken = session.tokens?.idToken?.toString();
         
@@ -42,7 +50,7 @@ function PricingContent() {
         setLoadingPlan(false);
       }
     })();
-  }, []);
+  }, [router]);
 
   function handleCancelClick() {
     setCancelConfirm(true);
@@ -106,6 +114,7 @@ function PricingContent() {
         await getCurrentUser();
       } catch {
         // Not authenticated, redirect to sign in
+        setRedirectDestination("/pricing");
         await signInWithRedirect();
         setLoading(null);
         return;
@@ -115,6 +124,7 @@ function PricingContent() {
       const idToken = session.tokens?.idToken?.toString();
 
       if (!idToken) {
+        setRedirectDestination("/pricing");
         await signInWithRedirect();
         setLoading(null);
         return;
