@@ -31,8 +31,41 @@ export default function NewProjectDiscoveryPage() {
     (async () => {
       try {
         await getCurrentUser();
+        
+        // Check usage limits before allowing new project
+        const session = await fetchAuthSession();
+        const idToken = session.tokens?.idToken?.toString();
+        
+        if (!idToken) {
+          await signInWithRedirect();
+          return;
+        }
+        
+        const usageRes = await fetch("/api/user/usage", {
+          headers: { authorization: `Bearer ${idToken}` },
+        });
+        
+        if (!usageRes.ok) {
+          console.error("Failed to check usage:", usageRes.status);
+          setCheckingAuth(false);
+          return;
+        }
+        
+        const usageData = await usageRes.json();
+        console.log("Usage check result:", usageData);
+        
+        if (usageData.ok && usageData.data) {
+          // If no remaining analyses, redirect to pricing page
+          if (usageData.data.remaining <= 0) {
+            console.log("User out of credits, redirecting to pricing");
+            router.push("/pricing?outOfCredits=true");
+            return;
+          }
+        }
+        
         setCheckingAuth(false);
-      } catch {
+      } catch (err) {
+        console.error("Error checking usage:", err);
         // User is not authenticated, redirect to sign in
         await signInWithRedirect();
       }

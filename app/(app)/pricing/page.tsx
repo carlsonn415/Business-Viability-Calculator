@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { PLANS } from "@/lib/stripe/plans";
 import { fetchAuthSession, getCurrentUser, signInWithRedirect } from "aws-amplify/auth";
 import { configureAmplify } from "@/lib/auth/amplifyClient";
 
-export default function PricingPage() {
+function PricingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState<string | null>(null);
   const [currentPlanId, setCurrentPlanId] = useState<string>("free");
   const [loadingPlan, setLoadingPlan] = useState(true);
@@ -16,6 +17,7 @@ export default function PricingPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [cancelConfirm, setCancelConfirm] = useState(false);
+  const outOfCredits = searchParams?.get("outOfCredits") === "true";
 
   useEffect(() => {
     configureAmplify();
@@ -156,6 +158,14 @@ export default function PricingPage() {
         <h1 className="text-3xl font-bold">Pricing</h1>
         <p className="mt-2 text-gray-600">Choose a plan that fits your needs</p>
         
+        {outOfCredits && (
+          <div className="mt-4 inline-block rounded-md bg-red-50 border border-red-200 px-4 py-2 max-w-2xl">
+            <p className="text-sm text-red-800 font-medium">
+              You've reached your monthly analysis limit. Upgrade your plan to get more analyses this month.
+            </p>
+          </div>
+        )}
+        
         {subscriptionInfo?.cancelAtPeriodEnd && (
           <div className="mt-4 inline-block rounded-md bg-yellow-50 border border-yellow-200 px-4 py-2">
             <p className="text-sm text-yellow-800">
@@ -291,6 +301,24 @@ export default function PricingPage() {
         ))}
       </div>
     </main>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <main className="space-y-8">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold">Pricing</h1>
+          <p className="mt-2 text-gray-600">Choose a plan that fits your needs</p>
+        </div>
+        <div className="flex items-center justify-center py-12">
+          <div className="w-8 h-8 border-4 border-gray-200 border-t-black rounded-full animate-spin" />
+        </div>
+      </main>
+    }>
+      <PricingContent />
+    </Suspense>
   );
 }
 

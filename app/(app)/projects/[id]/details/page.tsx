@@ -26,7 +26,6 @@ export default function ProjectDetailsPage() {
     (async () => {
       try {
         await getCurrentUser();
-        setCheckingAuth(false);
         
         // Fetch project details
         const session = await fetchAuthSession();
@@ -37,6 +36,25 @@ export default function ProjectDetailsPage() {
           router.push("/");
           return;
         }
+        
+        // Check usage limits before allowing analysis generation
+        const usageRes = await fetch("/api/user/usage", {
+          headers: { authorization: `Bearer ${idToken}` },
+        });
+        
+        if (usageRes.ok) {
+          const usageData = await usageRes.json();
+          if (usageData.ok && usageData.data) {
+            // If no remaining analyses, redirect to pricing page
+            if (usageData.data.remaining <= 0) {
+              console.log("User out of credits, redirecting to pricing");
+              router.push("/pricing?outOfCredits=true");
+              return;
+            }
+          }
+        }
+        
+        setCheckingAuth(false);
         
         try {
           const res = await fetch(`/api/projects/${projectId}`, {
@@ -98,6 +116,24 @@ export default function ProjectDetailsPage() {
         setFormError("Please sign in");
         setLoading(false);
         return;
+      }
+      
+      // Double-check usage limits before generating analysis
+      const usageRes = await fetch("/api/user/usage", {
+        headers: { authorization: `Bearer ${idToken}` },
+      });
+      
+      if (usageRes.ok) {
+        const usageData = await usageRes.json();
+        if (usageData.ok && usageData.data && usageData.data.remaining <= 0) {
+          setFormError("You've reached your monthly analysis limit. Please upgrade your plan to continue.");
+          setLoading(false);
+          // Redirect to pricing after a short delay
+          setTimeout(() => {
+            router.push("/pricing?outOfCredits=true");
+          }, 2000);
+          return;
+        }
       }
 
       const res = await fetch("/api/viability", {
