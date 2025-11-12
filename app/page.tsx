@@ -135,7 +135,7 @@ export default function HomePage() {
                   }}
                   className="inline-flex items-center justify-center rounded-md bg-primary-600 px-8 py-3 text-white hover:bg-primary-700 transition-colors text-lg font-medium shadow-lg hover:shadow-xl"
                 >
-                  {isAuthenticated ? "Go to Dashboard" : "Get Started for Free"}
+                  {isAuthenticated ? "Go to Projects" : "Get Started for Free"}
                 </button>
                 <button
                   onClick={async () => {
@@ -197,27 +197,29 @@ export default function HomePage() {
         <section className="py-12">
           <div className="max-w-6xl mx-auto px-6">
             <h2 className="text-3xl font-bold text-center mb-12 text-slate-900">How It Works</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-soft hover:shadow-lg transition-shadow">
-                <div className="text-2xl font-bold text-primary-600 mb-2">1</div>
-                <h3 className="text-xl font-semibold mb-3 text-slate-800">Discover Resources</h3>
-                <p className="text-gray-600">
-                  Enter your business idea and we'll automatically find relevant competitors, market reports, and industry news.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-soft hover:shadow-lg transition-shadow">
-                <div className="text-2xl font-bold text-primary-600 mb-2">2</div>
-                <h3 className="text-xl font-semibold mb-3 text-slate-800">Analyze & Process</h3>
-                <p className="text-gray-600">
-                  Select the resources you want to analyze. Our AI processes them to extract key insights and data.
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-soft hover:shadow-lg transition-shadow">
-                <div className="text-2xl font-bold text-primary-600 mb-2">3</div>
-                <h3 className="text-xl font-semibold mb-3 text-slate-800">Get Your Report</h3>
-                <p className="text-gray-600">
-                  Receive a comprehensive viability report with market size, risks, roadmap, and financial projections.
-                </p>
+            <div className="bg-white rounded-lg border border-gray-200 shadow-soft overflow-hidden">
+              <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                <div className="p-6">
+                  <div className="text-2xl font-bold text-primary-600 mb-2">1</div>
+                  <h3 className="text-xl font-semibold mb-3 text-slate-800">Discover Resources</h3>
+                  <p className="text-gray-600">
+                    Enter your business idea and we'll automatically find relevant competitors, market reports, and industry news.
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="text-2xl font-bold text-primary-600 mb-2">2</div>
+                  <h3 className="text-xl font-semibold mb-3 text-slate-800">Analyze & Process</h3>
+                  <p className="text-gray-600">
+                    Select the resources you want to analyze. Our AI processes them to extract key insights and data.
+                  </p>
+                </div>
+                <div className="p-6">
+                  <div className="text-2xl font-bold text-primary-600 mb-2">3</div>
+                  <h3 className="text-xl font-semibold mb-3 text-slate-800">Get Your Report</h3>
+                  <p className="text-gray-600">
+                    Receive a comprehensive viability report with market size, risks, roadmap, and financial projections.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -225,8 +227,8 @@ export default function HomePage() {
 
         {/* Pricing Preview */}
         <section className="max-w-6xl mx-auto px-6 py-12">
-          <h2 className="text-3xl font-bold text-center mb-4 text-white">Simple, Transparent Pricing</h2>
-          <p className="text-center text-gray-200 mb-12">Start free, upgrade when you need more</p>
+          <h2 className="text-3xl font-bold text-center mb-4 text-slate-900">Simple, Transparent Pricing</h2>
+          <p className="text-center text-slate-800 mb-12">Start free, upgrade when you need more</p>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="border border-gray-200 rounded-lg p-6 flex flex-col bg-white shadow-soft hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-semibold mb-2 text-slate-800">Free</h3>
