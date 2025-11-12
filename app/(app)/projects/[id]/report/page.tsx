@@ -38,10 +38,10 @@ export default function ProjectReportPage() {
         if (res.ok) {
           const response = await res.json();
           if (response.ok && response.data) {
-            const project = response.data;
-            setProject(project);
-            if (project.latestAnalysis?.output) {
-              setAnalysis(project.latestAnalysis.output);
+            const projectData = response.data;
+            setProject(projectData);
+            if (projectData.latestAnalysis?.output) {
+              setAnalysis(projectData.latestAnalysis.output);
             } else {
               // No analysis found, but don't redirect - show the "no analysis" message
               setAnalysis(null);
@@ -108,8 +108,11 @@ export default function ProjectReportPage() {
     <main className="max-w-4xl mx-auto space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{project?.businessIdea || "Viability Report"}</h1>
-          <p className="text-gray-600 mt-1">Business Viability Analysis</p>
+          <h1 className="text-3xl font-bold">{project?.title || project?.businessIdea || "Viability Report"}</h1>
+          {project?.description && (
+            <p className="text-gray-600 mt-1">{project.description}</p>
+          )}
+          <p className="text-gray-500 mt-1 text-sm">Business Viability Analysis</p>
         </div>
         <button
           onClick={() => router.push("/")}

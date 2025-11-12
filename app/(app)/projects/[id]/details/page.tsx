@@ -65,7 +65,8 @@ export default function ProjectDetailsPage() {
             const data = await res.json();
             if (data.ok && data.data) {
               setProject(data.data);
-              setIdea(data.data.businessIdea || data.data.title || "");
+              // Use description if available, otherwise fall back to businessIdea or title
+              setIdea(data.data.description || data.data.businessIdea || data.data.title || "");
               setError(null);
             } else {
               console.error("Invalid response format:", data);
@@ -178,7 +179,11 @@ export default function ProjectDetailsPage() {
   return (
     <main className="max-w-2xl mx-auto space-y-6 p-6">
       <div>
-        <h1 className="text-3xl font-bold">Step 2: Enter Details</h1>
+        <h1 className="text-3xl font-bold">
+          {project?.title 
+            ? `Step 2: Enter Details for ${project.title}`
+            : "Step 2: Enter Details"}
+        </h1>
         <p className="text-gray-600 mt-2">
           Provide additional details about your business idea to generate a comprehensive viability report
         </p>

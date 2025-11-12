@@ -44,7 +44,8 @@ export default function DiscoveryPage() {
 
         if (res.ok) {
           const data = await res.json();
-          setBusinessIdea(data.project?.businessIdea || "");
+          // Use description if available, otherwise fall back to businessIdea or title
+          setBusinessIdea(data.project?.description || data.project?.businessIdea || data.project?.title || "");
         }
       } catch (err) {
         console.error("Failed to fetch project:", err);

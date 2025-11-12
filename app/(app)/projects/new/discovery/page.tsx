@@ -17,7 +17,8 @@ interface DiscoveredUrl {
 export default function NewProjectDiscoveryPage() {
   const router = useRouter();
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [businessIdea, setBusinessIdea] = useState("");
+  const [businessName, setBusinessName] = useState("");
+  const [businessDescription, setBusinessDescription] = useState("");
   const [discovering, setDiscovering] = useState(false);
   const [urls, setUrls] = useState<DiscoveredUrl[]>([]);
   const [selectedUrls, setSelectedUrls] = useState<Set<string>>(new Set());
@@ -121,8 +122,13 @@ export default function NewProjectDiscoveryPage() {
   }, [jobId, analysisStatus, projectId, router]);
 
   async function handleDiscover() {
-    if (!businessIdea.trim()) {
-      setError("Business idea is required");
+    if (!businessName.trim()) {
+      setError("Business name is required");
+      return;
+    }
+
+    if (!businessDescription.trim()) {
+      setError("Business description is required");
       return;
     }
 
@@ -147,8 +153,8 @@ export default function NewProjectDiscoveryPage() {
             authorization: `Bearer ${idToken}`,
           },
           body: JSON.stringify({
-            title: businessIdea.slice(0, 60),
-            description: businessIdea,
+            title: businessName.trim(),
+            description: businessDescription.trim(),
           }),
         });
 
@@ -160,14 +166,14 @@ export default function NewProjectDiscoveryPage() {
         }
       }
 
-      // Discover URLs
+      // Discover URLs using business description as the search query
       const res = await fetch("/api/discovery/urls", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ businessIdea }),
+        body: JSON.stringify({ businessIdea: businessDescription }),
       });
 
       const data = await res.json();
@@ -328,19 +334,29 @@ export default function NewProjectDiscoveryPage() {
       {urls.length === 0 ? (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Business Idea</label>
+            <label className="block text-sm font-medium mb-2">Business Name</label>
+            <input
+              type="text"
+              className="w-full border rounded-md p-3"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              placeholder="e.g., EcoPet Box"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2">Business Description</label>
             <textarea
               className="w-full border rounded-md p-3 min-h-[100px]"
-              value={businessIdea}
-              onChange={(e) => setBusinessIdea(e.target.value)}
-              placeholder="e.g., A subscription box service for eco-friendly pet products"
+              value={businessDescription}
+              onChange={(e) => setBusinessDescription(e.target.value)}
+              placeholder="Describe your business idea in detail. For example: A subscription box service for eco-friendly pet products targeting environmentally conscious pet owners..."
             />
           </div>
 
           <button
             className="w-full rounded-md bg-black px-4 py-3 text-white hover:opacity-90 disabled:opacity-50"
             onClick={handleDiscover}
-            disabled={discovering || !businessIdea.trim()}
+            disabled={discovering || !businessName.trim() || !businessDescription.trim()}
           >
             {discovering ? "Discovering..." : "Discover Resources"}
           </button>

@@ -518,7 +518,12 @@ export default function HomePage() {
                         onClick={() => handleProjectClick(project)}
                       >
                         <h3 className="font-medium">{project.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">
+                        {project.description && (
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                            {project.description}
+                          </p>
+                        )}
+                        <p className="text-sm text-gray-500 mt-1">
                           Confidence Score: Not Yet Generated
                         </p>
                         <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
@@ -564,7 +569,12 @@ export default function HomePage() {
                         onClick={() => handleProjectClick(project)}
                       >
                         <h3 className="font-medium">{project.title}</h3>
-                        <p className="text-sm text-gray-600 mt-1">
+                        {project.description && (
+                          <p className="text-sm text-gray-600 mt-1 line-clamp-2">
+                            {project.description}
+                          </p>
+                        )}
+                        <p className="text-sm text-gray-500 mt-1">
                           Confidence Score: {project.confidenceScore !== null ? `${project.confidenceScore}%` : "Not Available"}
                         </p>
                         <p className="text-xs text-gray-500 mt-2">
