@@ -82,10 +82,11 @@ export async function POST(req: NextRequest) {
       const hasDocuments = await hasIngestedDocuments(existingProject.id);
       if (hasDocuments) {
         console.log(`Retrieving RAG context for project ${existingProject.id}`);
+        // Retrieve more chunks for better financial and market data coverage
         const searchResults = await searchSimilarChunks(
           existingProject.id,
           input.idea,
-          5 // Top 5 most relevant chunks
+          10 // Top 10 most relevant chunks for comprehensive analysis
         );
 
         if (searchResults.length > 0) {
