@@ -45,6 +45,10 @@ export function configureAmplify() {
     return;
   }
 
+  // Use only the base URL (first element) for Amplify SDK
+  // The wildcard is only needed in Cognito console, not in SDK config
+  const baseRedirectUrl = redirectUrls[0];
+
   try {
     Amplify.configure({
       Auth: {
@@ -55,8 +59,8 @@ export function configureAmplify() {
             oauth: {
               domain: oauthDomain,
               scopes: ["openid", "email", "profile"],
-              redirectSignIn: redirectUrls,
-              redirectSignOut: redirectUrls,
+              redirectSignIn: [baseRedirectUrl],  // Array with only base URL
+              redirectSignOut: [baseRedirectUrl],  // Array with only base URL
               responseType: "code",
             },
           },
@@ -67,7 +71,7 @@ export function configureAmplify() {
     isConfigured = true;
     console.log("Amplify configured successfully", {
       userPoolId: userPoolId.substring(0, 10) + "...",
-      redirectUrls,
+      redirectUrl: baseRedirectUrl,
     });
   } catch (error) {
     console.error("Amplify configuration error:", error);
