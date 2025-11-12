@@ -47,7 +47,7 @@ export function configureAmplify() {
 
   // Use only the base URL (first element) for Amplify SDK
   // The wildcard is only needed in Cognito console, not in SDK config
-  const baseRedirectUrl = "https://production.d223rlfcu71cz9.amplifyapp.com/";
+  const baseRedirectUrl = redirectUrls[0];
 
   try {
     Amplify.configure({
