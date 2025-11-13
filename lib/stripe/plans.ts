@@ -65,11 +65,11 @@ export function getPlans(): Record<string, Plan> {
     let stripePriceId = "";
     
     if (planDef.id === "starter") {
-      stripePriceId = process.env.STRIPE_PRICE_STARTER || "test_price_id";
+      stripePriceId = process.env.STRIPE_PRICE_STARTER || "";
     } else if (planDef.id === "pro") {
-      stripePriceId = process.env.STRIPE_PRICE_PRO || "test_price_id";
+      stripePriceId = process.env.STRIPE_PRICE_PRO || "";
     } else if (planDef.id === "starter-to-pro-upgrade") {
-      stripePriceId = process.env.STRIPE_PRICE_STARTER_TO_PRO_UPGRADE || "test_price_id";
+      stripePriceId = process.env.STRIPE_PRICE_STARTER_TO_PRO_UPGRADE || "";
     }
     // free plan has no stripePriceId
     
