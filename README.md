@@ -78,8 +78,8 @@ Enhance analyses with real market data:
 
 Three-tier pricing model:
 - **Free**: 3 analyses/month
-- **Starter ($29)**: 25 analyses/month + detailed reports
-- **Pro ($99)**: 100 analyses/month + RAG + AI chat + PDF export
+- **Starter ($5)**: 25 analyses/month + detailed reports
+- **Pro ($15)**: 100 analyses/month + RAG + AI chat + PDF export
 
 Features:
 - Stripe Checkout integration
@@ -251,22 +251,6 @@ The deployment guide covers:
 - Environment variable validation
 - CORS configuration
 - Input sanitization with Zod schemas
-
----
-
-## 💰 Cost Breakdown
-
-**Free Tier Usage:**
-- AWS Lambda: 1M requests/month free
-- Brave Search: 2,000 searches/month free
-- Neon: 10GB storage free
-
-**Estimated Monthly Costs (Light Usage):**
-- OpenAI Embeddings (text-embedding-3-small): ~$1-2
-- OpenAI GPT-4o-mini (analysis): ~$2-5
-- OpenAI GPT-4o (discovery): ~$1-3
-- AWS Lambda execution: ~$0.50
-- **Total: ~$5-11/month** for 50-100 analyses
 
 ---
 
