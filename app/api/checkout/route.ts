@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       
       return NextResponse.json({ 
         ok: false, 
-        error: `Plan "${plan.name}" is not configured. Please set the ${envVarName} environment variable with a valid Stripe price ID.` 
+        error: `Plan "${plan.stripePriceId}" is not configured. Please set the ${envVarName} environment variable with a valid Stripe price ID.` 
       }, { status: 500 });
     }
 
