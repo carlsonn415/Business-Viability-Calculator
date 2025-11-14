@@ -7,7 +7,7 @@
 [![Prisma](https://img.shields.io/badge/Prisma-6.19-brightgreen)](https://www.prisma.io/)
 [![AWS](https://img.shields.io/badge/AWS-Amplify%20%7C%20Lambda-orange)](https://aws.amazon.com/)
 
-**[Live Demo](#)** • **[Architecture](docs/ARCHITECTURE.md)** • **[API Reference](docs/API_REFERENCE.md)**
+**[Live Application](https://production.d223rlfcu71cz9.amplifyapp.com/)** • **[Architecture](docs/ARCHITECTURE.md)** • **[API Reference](docs/API_REFERENCE.md)**
 
 ---
 
@@ -18,13 +18,13 @@ Startup Gauge is a full-stack SaaS application that leverages AI to analyze busi
 ## 📸 Screenshots
 
 ![Landing page hero](screenshots/SCR-20251114-jrvs.png)
-<sup>Polished landing page that highlights the value proposition and routes visitors to sign in.</sup>
+<sup>Landing page</sup>
 
 ![Viability report detail view](screenshots/SCR-20251114-jtbd.png)
-<sup>AI-generated viability report with market sizing, roadmap, risk analysis, and financial projections.</sup>
+<sup>Viability report with confidence score</sup>
 
 ![Pricing and subscription management](screenshots/SCR-20251114-jsft.png)
-<sup>Pricing page with upgrade actions backed by live Stripe subscriptions.</sup>
+<sup>Pricing page</sup>
 
 ### Key Features
 
@@ -146,44 +146,6 @@ Features:
 
 ---
 
-## ⚙️ Setup & Installation
-
-> **For complete setup instructions, see [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)**
-
-### Quick Start
-
-1. **Clone and install:**
-   ```bash
-   git clone <repository-url>
-   cd Business-Viability-Calculator
-   npm install
-   ```
-
-2. **Set up environment variables** (see [Deployment Guide](docs/DEPLOYMENT_GUIDE.md#local-development-setup) for complete list)
-
-3. **Set up database:**
-   ```bash
-   npx prisma migrate dev
-   npx prisma generate
-   ```
-
-4. **Run development server:**
-   ```bash
-   npm run dev
-   ```
-
-### Prerequisites
-
-- **Node.js 20+**
-- **PostgreSQL** with pgvector extension (Neon recommended)
-- **AWS Account** (for Amplify Auth + Lambda)
-- **API Keys**: OpenAI, Stripe, Brave Search
-- **AWS CLI** and **SAM CLI** (for Lambda deployment)
-
-**See [Complete Deployment Guide](docs/DEPLOYMENT_GUIDE.md) for detailed setup instructions.**
-
----
-
 ## 🧪 Available Scripts
 
 ```bash
@@ -222,26 +184,6 @@ See [prisma/schema.prisma](prisma/schema.prisma) for full schema.
 
 **See [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) for the complete step-by-step deployment guide from scratch.**
 
-The deployment guide covers:
-- Local development setup
-- Database configuration (Neon PostgreSQL with pgvector)
-- AWS Cognito authentication setup
-- Stripe payment integration
-- RAG system setup (AWS Lambda)
-- AWS Amplify hosting deployment
-- Post-deployment configuration
-- Monitoring and observability
-- Troubleshooting
-
-### Quick Overview
-
-1. **Set up local environment** - Install dependencies, configure database
-2. **Configure AWS Cognito** - Create user pool and app client
-3. **Set up Stripe** - Create products and configure webhooks
-4. **Deploy Lambda** - RAG ingestion worker for document processing
-5. **Deploy to Amplify** - Connect GitHub, configure build, add environment variables
-6. **Post-deployment** - Update callback URLs, configure webhooks, verify deployment
-
 ---
 
 ## 📖 Documentation
@@ -265,27 +207,6 @@ The deployment guide covers:
 
 ---
 
-## 🛣️ Roadmap
-
-- [ ] Enhanced landing page with feature showcase
-- [ ] User dashboard with analytics
-- [ ] Comparative analysis (multiple ideas)
-- [ ] API access for Pro tier
-- [ ] Semantic chunking strategy
-- [ ] Support for more document types (DOCX, MD)
-- [ ] Team collaboration features
-- [ ] Advanced analytics and insights dashboard
-
----
-
 ## 📝 License
 
 This project is licensed under the Apache 2.0 License - see [LICENSE.md](LICENSE.md) for details.
-
----
-
-## 👨‍💻 Author
-
-**Nathan Carlson** - Portfolio Project
-
-**Built to demonstrate:** Full-stack development, AI integration, RAG implementation, serverless architecture, payment systems, and production-ready AWS deployment.
